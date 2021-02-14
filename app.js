@@ -25,17 +25,15 @@ const showImages = (images) => {
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div)
   })
-  document.getElementById('spinner').classList.toggle('d-none');
-  document.getElementById('displayResults').classList.toggle('d-none');
+  toggleItem();
 }
 
 const getImages = (query) => {
-  document.getElementById('spinner').classList.toggle('d-none');
-  document.getElementById('displayResults').classList.toggle('d-none');
+  toggleItem();
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => { 
-      showImages(data.hits) 
+    .then(data => {
+      showImages(data.hits)
     })
     .catch(err => console.log(err))
 }
@@ -90,6 +88,8 @@ const createSlider = () => {
     changeSlide(slideIndex);
   }, duration);
 
+  // display btn
+  document.getElementById('backBtn').classList.toggle('d-none');
 }
 
 // change slider index 
@@ -131,8 +131,23 @@ sliderBtn.addEventListener('click', function () {
 })
 
 //enter key detection
-document.getElementById('search').addEventListener('keyup', function(event){
-    if (event.key === 'Enter') {
-        getImages(document.getElementById('search').value);
-    }
+document.getElementById('search').addEventListener('keyup', function (event) {
+  if (event.key === 'Enter') {
+    document.getElementById('search-btn').click();
+  }
 })
+
+//toggle Item 
+const toggleItem = () => {
+  document.getElementById('spinner').classList.toggle('d-none');
+  document.getElementById('displayResults').classList.toggle('d-none');
+}
+
+// back to search from slider
+const stopSlider = () => {
+  document.getElementById('backBtn').classList.toggle('d-none');
+  document.getElementById('search-btn').click();
+}
+
+
+
